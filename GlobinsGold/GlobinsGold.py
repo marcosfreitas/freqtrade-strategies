@@ -108,7 +108,31 @@ class GlobinsGold(IStrategy):
                     "color": "#edc618",
                     "type": "line"
                 }
+            },
+            "MACD": {
+                "macd": {
+                    "color": "#ff2e1f",
+                    "type": "line"
+                },
+                "macdsignal": {
+                    "color": "#ffbc1f",
+                    "type": "line"
+                }
             }
+        }
+    }
+
+    buy_conditions_groups = {
+        1: {
+            "name": "2sma_rsi",
+            "enabled": True,
+            "protections": {}
+        },
+
+        2: {
+            "name": "hammer_invertedHammer_3soldiers",
+            "enabled": True,
+            "protections": {}
         }
     }
 
@@ -116,18 +140,21 @@ class GlobinsGold(IStrategy):
     buy_ema_enabled = BooleanParameter(default=False, space="buy")
     buy_3sma_enabled = BooleanParameter(default=False, space="buy")
     buy_2sma_enabled = BooleanParameter(default=True, space="buy")
-    buy_cdl_hammer_enabled = BooleanParameter(default=False, space="buy")
+    buy_cdl_hammer_enabled = BooleanParameter(default=True, space="buy")
+    buy_cdl_inverted_hammer_enabled = BooleanParameter(default=True, space="buy")
+    buy_cdl_3_white_soldiers_enabled = BooleanParameter(default=True, space="buy")
 
     sell_rsi_enabled = BooleanParameter(default=True, space="sell")
     sell_ema_enabled = BooleanParameter(default=False, space="sell")
     sell_3sma_enabled = BooleanParameter(default=False, space="sell")
     sell_2sma_enabled = BooleanParameter(default=True, space="sell")
-    sell_cdl_hammer_enabled = BooleanParameter(default=False, space="sell")
+    sell_cdl_hanging_man_enabled = BooleanParameter(default=True, space="sell")
+    sell_cdl_shooting_star_enabled = BooleanParameter(default=True, space="sell")
 
     rsi_overbought_limit = 70
     rsi_oversell_limit = 20
     # the difference between the RSI line and the overbought / oversell line
-    rsi_proximity_boundaries = 10
+    rsi_proximity_boundaries = 5
 
 
     buy_ema_short = IntParameter(3, 19, default=19, space="buy")
@@ -386,7 +413,7 @@ class GlobinsGold(IStrategy):
         # # Hammer: values [0, 100]
         dataframe['CDLHAMMER'] = ta.CDLHAMMER(dataframe)
         # # Inverted Hammer: values [0, 100]
-        #dataframe['CDLINVERTEDHAMMER'] #= ta.CDLINVERTEDHAMMER(dataframe)
+        dataframe['CDLINVERTEDHAMMER'] = ta.CDLINVERTEDHAMMER(dataframe)
         # # Dragonfly Doji: values [0, 100]
         # dataframe['CDLDRAGONFLYDOJI'] = ta.CDLDRAGONFLYDOJI(dataframe)
         # # Piercing Line: values [0, 100]
@@ -394,14 +421,14 @@ class GlobinsGold(IStrategy):
         # # Morningstar: values [0, 100]
         # dataframe['CDLMORNINGSTAR'] = ta.CDLMORNINGSTAR(dataframe) # values [0, 100]
         # # Three White Soldiers: values [0, 100]
-        # dataframe['CDL3WHITESOLDIERS'] = ta.CDL3WHITESOLDIERS(dataframe) # values [0, 100]
+        dataframe['CDL3WHITESOLDIERS'] = ta.CDL3WHITESOLDIERS(dataframe) # values [0, 100]
 
         # Pattern Recognition - Bearish candlestick patterns
         # ------------------------------------
-        # # Hanging Man: values [0, 100]
-        # dataframe['CDLHANGINGMAN'] = ta.CDLHANGINGMAN(dataframe)
-        # # Shooting Star: values [0, 100]
-        # dataframe['CDLSHOOTINGSTAR'] = ta.CDLSHOOTINGSTAR(dataframe)
+        # # Hanging Man: values [-100, 0]
+        dataframe['CDLHANGINGMAN'] = ta.CDLHANGINGMAN(dataframe)
+        # # Shooting Star: values [-100, 0]
+        dataframe['CDLSHOOTINGSTAR'] = ta.CDLSHOOTINGSTAR(dataframe)
         # # Gravestone Doji: values [0, 100]
         # dataframe['CDLGRAVESTONEDOJI'] = ta.CDLGRAVESTONEDOJI(dataframe)
         # # Dark Cloud Cover: values [0, 100]
@@ -458,137 +485,149 @@ class GlobinsGold(IStrategy):
         conditions = []
         dataframe.loc[:, 'buy_tag'] = ''
         dataframe.loc[:, 'buy'] = 0
+        dataframe.loc[:, 'group_name'] = ''
 
-        # Guards and Trends
-        """
-            - if SMA_SHORT crosses above all SMAs
-            -- extra check with proximity factor
-            - if SMA_5 crosses above SMA_20
-            - if Momentum is positive
-            - if RSI is oversold compared to Its limits
-            - if Consider Hammer in max value
-        """
-        if self.buy_3sma_enabled.value:
-            SMAshort_SMAmedium_difference = (
-                dataframe[f'buy_sma_short_{self.buy_3sma_short.value}'] - dataframe[f'buy_sma_medium_{self.buy_3sma_medium.value}']
-            )
-            SMAs_proximity = round(SMAshort_SMAmedium_difference,1)
-            # 1.2 is a factor of proximity when the SMAs indicator are descendent
-            PROXIMITY_FACTOR = 1.2
+        for group_index in self.buy_conditions_groups:
 
-            check_3sma = (
-                (SMAs_proximity > PROXIMITY_FACTOR)
-                &
-                (dataframe[f'buy_sma_short_{self.buy_3sma_short.value}'] > dataframe[f'buy_sma_medium_{self.buy_3sma_medium.value}'])
-                &
-                (dataframe[f'buy_sma_short_{self.buy_3sma_short.value}'] > dataframe[f'buy_sma_long_{self.buy_3sma_long.value}'])
-                &
-                (dataframe[f'buy_sma_medium_{self.buy_3sma_medium.value}'] > dataframe[f'buy_sma_long_{self.buy_3sma_long.value}'])
-            )
-            dataframe.loc[check_3sma,'buy_tag'] += '3sma '
-            conditions.append(check_3sma)
-
-        # 2 SMA Crossover
-        if self.buy_2sma_enabled.value:
-            buy_2ma = (
-                qtpylib.crossed_above(
-                    dataframe['sma_5'], dataframe['sma_20']
-                )
-                &
-                (dataframe['volume'] >= 1000)
-            )
-            dataframe.loc[buy_2ma,'buy_tag'] += '2sma '
-            conditions.append(buy_2ma)
-
-            #check_volume = dataframe['volume'] >= 1000
-            #dataframe.loc[check_volume,'buy_tag'] += 'volume_1000 '
-            #conditions.append(check_volume)
-
-        if self.buy_rsi_enabled.value:
-            """
-            rsi = (
-                (dataframe['rsi'] > self.rsi_oversell_limit)
-                &
-                (dataframe['rsi'] < self.rsi_overbought_limit)
-            )
-            """
-            rsi = (
-                (dataframe['rsi'] > self.rsi_oversell_limit)
-                &
-                (dataframe['rsi'] < (self.rsi_overbought_limit - self.rsi_proximity_boundaries))
-            )
-            dataframe.loc[rsi,'buy_tag'] += 'rsi '
-            conditions.append(rsi)
-
-        if self.buy_cdl_hammer_enabled.value:
-            cdl_hammer = (dataframe['CDLHAMMER'] == 100)
-            dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_hammer '
-            conditions.append(cdl_hammer)
+            # @todo add default protections
 
 
-        # Triggers
-        """
-            - if EMA_* is minor than candle close price AND momentum is greater than 0
-            - if close price is minor than bolinger lowerband
-            - if MACD crossed above Its signal line
-        """
-        if self.buy_trigger == 'elders_moment':
-            # Trying Elder's Moment
-            # combining A Momentum with a EMA. By default it's expected to be a MOM(14) with a EMA(19) for H1-D1 time frames.
-            # A buy signal is Momentum above the average level, the most part of a body of the current candle is higher than a moving average
-            # @see https://www.fcxchief.asia/library/indicators/momentum-indicator/
+            buy_condition = []
+            if group_index == 1:
 
-            elders_moment = (
-                (dataframe['close'] > dataframe[f'buy_ema_short_{self.buy_ema_short.value}'])
-                &
-                (dataframe['mom'] > 0)
-            )
-            dataframe.loc[elders_moment,'buy_tag'] += 'elders_moment '
-            conditions.append(elders_moment)
+                 # 2 SMA Crossover
+                if self.buy_2sma_enabled.value:
+                    buy_2ma = (
+                        qtpylib.crossed_above(
+                            dataframe['sma_5'], dataframe['sma_20']
+                        )
+                        &
+                        (dataframe['volume'] >= 1000)
+                    )
+                    dataframe.loc[buy_2ma,'buy_tag'] += '2sma '
+                    buy_condition.append(buy_2ma)
 
-        if self.buy_trigger == 'bb_lower':
-            bb_lowerband = (
-                dataframe['close'] < dataframe['bb_lowerband']
-            )
-            dataframe.loc[bb_lowerband,'buy_tag'] += 'bb_lowerband '
-            conditions.append(bb_lowerband)
+                    #check_volume = dataframe['volume'] >= 1000
+                    #dataframe.loc[check_volume,'buy_tag'] += 'volume_1000 '
+                    #buy_condition.append(check_volume)
 
-        if self.buy_trigger.value == 'macd_cross_signal':
-            macd = (
-                qtpylib.crossed_above(
-                    dataframe['macd'], dataframe['macdsignal']
-                )
-            )
-            dataframe.loc[macd,'buy_tag'] += 'macd_positive '
-            conditions.append(macd)
+                if self.buy_rsi_enabled.value:
 
-        # Check that volume is not 0
-        volume_gt_zero = (dataframe['volume'] > 0)
+                    # when rsi is just increasing
+                    rsi_middle = (
+                        (dataframe['rsi'] > self.rsi_oversell_limit)
+                        &
+                        (dataframe['rsi'] < (self.rsi_overbought_limit - self.rsi_proximity_boundaries))
+                        &
+                        (dataframe['rsi'] < dataframe['rsi'].shift(5))
+                    )
 
-        """
-        dataframe.loc[
-            (
-                (qtpylib.crossed_above(dataframe['sma5'], dataframe['sma10'])) &
-                (qtpylib.crossed_above(dataframe['sma5'], dataframe['sma20'])) &
-                (dataframe['rsi'] > 25) &  # Signal: RSI crosses oversell line
-                (dataframe['rsi'] < 75) &  # Signal: RSI not crosses overbought line
-                #(dataframe['bb_lowerband'] > dataframe['close']) &
-                (dataframe['mom'] > 0) &
-                (dataframe['ema19'] < dataframe['close']) &
-                (dataframe['volume'] > 0)  # Make sure Volume is not 0
-            ),
-            'buy'] = 1
-        """
+                    # rsi is in oversell status
+                    rsi_low = (dataframe['rsi'] < self.rsi_oversell_limit)
+
+                    dataframe.loc[(rsi_middle | rsi_low),'buy_tag'] += 'rsi '
+                    buy_condition.append(rsi_middle | rsi_low)
+
+            elif group_index == 2:
+
+                if self.buy_cdl_hammer_enabled.value:
+                    # 100 represent that the bullish pattern is observed in this point in the data
+                    cdl_hammer = (dataframe['CDLHAMMER'] == 100)
+                    dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_hammer '
+                    buy_condition.append(cdl_hammer)
+
+                if self.buy_cdl_inverted_hammer_enabled.value:
+                    buy_condition.append(dataframe['CDLINVERTEDHAMMER'] == 100)
+                    dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_inverted_hammer '
+
+                if self.buy_cdl_3_white_soldiers_enabled.value:
+                    buy_condition.append(dataframe['CDL3WHITESOLDIERS'] == 100)
+                    dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_3_white_soldiers '
+
+            elif group_index == 3:
+
+                # Guards and Trends
+                """
+                    - if SMA_SHORT crosses above all SMAs
+                    -- extra check with proximity factor
+                    - if SMA_5 crosses above SMA_20
+                    - if Momentum is positive
+                    - if RSI is oversold compared to Its limits
+                    - if Consider Hammer in max value
+                """
+                if self.buy_3sma_enabled.value:
+                    SMAshort_SMAmedium_difference = (
+                        dataframe[f'buy_sma_short_{self.buy_3sma_short.value}'] - dataframe[f'buy_sma_medium_{self.buy_3sma_medium.value}']
+                    )
+                    SMAs_proximity = round(SMAshort_SMAmedium_difference,1)
+                    # 1.2 is a factor of proximity when the SMAs indicator are descendent
+                    PROXIMITY_FACTOR = 1.2
+
+                    check_3sma = (
+                        (SMAs_proximity > PROXIMITY_FACTOR)
+                        &
+                        (dataframe[f'buy_sma_short_{self.buy_3sma_short.value}'] > dataframe[f'buy_sma_medium_{self.buy_3sma_medium.value}'])
+                        &
+                        (dataframe[f'buy_sma_short_{self.buy_3sma_short.value}'] > dataframe[f'buy_sma_long_{self.buy_3sma_long.value}'])
+                        &
+                        (dataframe[f'buy_sma_medium_{self.buy_3sma_medium.value}'] > dataframe[f'buy_sma_long_{self.buy_3sma_long.value}'])
+                    )
+                    dataframe.loc[check_3sma,'buy_tag'] += '3sma '
+                    buy_condition.append(check_3sma)
+
+            elif group_index == 4:
+
+                # Triggers
+                """
+                    - if EMA_* is minor than candle close price AND momentum is greater than 0
+                    - if close price is minor than bolinger lowerband
+                    - if MACD crossed above Its signal line
+                """
+                if self.buy_trigger == 'elders_moment':
+                    # Trying Elder's Moment
+                    # combining A Momentum with a EMA. By default it's expected to be a MOM(14) with a EMA(19) for H1-D1 time frames.
+                    # A buy signal is Momentum above the average level, the most part of a body of the current candle is higher than a moving average
+                    # @see https://www.fcxchief.asia/library/indicators/momentum-indicator/
+
+                    elders_moment = (
+                        (dataframe['close'] > dataframe[f'buy_ema_short_{self.buy_ema_short.value}'])
+                        &
+                        (dataframe['mom'] > 0)
+                    )
+                    dataframe.loc[elders_moment,'buy_tag'] += 'elders_moment '
+                    buy_condition.append(elders_moment)
+
+            elif group_index == 5:
+
+                if self.buy_trigger == 'bb_lower':
+                    bb_lowerband = (
+                        dataframe['close'] < dataframe['bb_lowerband']
+                    )
+                    dataframe.loc[bb_lowerband,'buy_tag'] += 'bb_lowerband '
+                    buy_condition.append(bb_lowerband)
+
+            elif group_index == 6:
+
+                if self.buy_trigger.value == 'macd_cross_signal':
+                    macd = (
+                        qtpylib.crossed_above(
+                            dataframe['macd'], dataframe['macdsignal']
+                        )
+                    )
+                    dataframe.loc[macd,'buy_tag'] += 'macd_positive '
+                    buy_condition.append(macd)
+
+            # Check that volume is not 0
+            volume_gt_zero = (dataframe['volume'] > 0)
+            condition_group = (volume_gt_zero & reduce(lambda x, y: x & y, buy_condition))
+
+            dataframe.loc[condition_group, 'group_name'] += self.buy_conditions_groups[group_index]["name"]
+
+            conditions.append(condition_group)
 
         if conditions:
             # change | to & can decrease profit
-            """
-            dataframe.loc[
-                reduce(lambda x, y: x & y, conditions),
-                'buy'
-            ] = 1
-            """
-            dataframe.loc[:, 'buy'] = (volume_gt_zero & reduce(lambda x, y: x & y, conditions))
+            dataframe.loc[:, 'buy'] = reduce(lambda x, y: x | y, conditions)
 
         return dataframe
 
@@ -628,7 +667,16 @@ class GlobinsGold(IStrategy):
         if self.sell_rsi_enabled.value:
             conditions.append(
                 (dataframe['rsi'] > (self.rsi_overbought_limit - self.rsi_proximity_boundaries))
+                &
+                (dataframe['rsi'] > dataframe['rsi'].shift(1))
             )
+
+        if self.sell_cdl_hanging_man_enabled.value:
+            # -100 represent that the bearish pattern is observed in this point in the data
+            conditions.append(dataframe['CDLHANGINGMAN'] == -100)
+
+        if self.sell_cdl_shooting_star_enabled.value:
+            conditions.append(dataframe['CDLSHOOTINGSTAR'] == -100)
 
         # Triggers
         """
@@ -659,10 +707,8 @@ class GlobinsGold(IStrategy):
         # Check that volume is not 0
         volume_gt_zero = (dataframe['volume'] > 0)
 
-
         if conditions:
             # change & to | can decrease profits
             dataframe.loc[:, 'sell'] = (volume_gt_zero & reduce(lambda x, y: x & y, conditions))
-
 
         return dataframe

@@ -31,10 +31,9 @@ seems that PROXIMITY factor can be used to check a uptrend
 ======================================================= SELL REASON STATS ========================================================
 |        Sell Reason |   Sells |   Win  Draws  Loss  Win% |   Avg Profit % |   Cum Profit % |   Tot Profit BUSD |   Tot Profit % |
 |--------------------+---------+--------------------------+----------------+----------------+-------------------+----------------|
-|                roi |     714 |    353   361     0   100 |           1    |         716.4  |           367.824 |         119.4  |
-| trailing_stop_loss |      18 |      2     0    16  11.1 |         -24.61 |        -442.92 |          -252.498 |         -73.82 |
-|        sell_signal |       9 |      1     0     8  11.1 |          -7.23 |         -65.1  |           -33.467 |         -10.85 |
-|         force_sell |       6 |      0     0     6     0 |          -6.25 |         -37.48 |           -20.31  |          -6.25 |
+|                roi |     432 |    207   225     0   100 |           0.91 |         392.88 |           197.568 |          65.48 |
+| trailing_stop_loss |       8 |      0     0     8     0 |         -28.26 |        -226.08 |          -131.698 |         -37.68 |
+|         force_sell |       5 |      0     0     5     0 |         -10.09 |         -50.46 |           -25.89  |          -8.41 |
 
 
 =============== SUMMARY METRICS ================
@@ -44,33 +43,33 @@ seems that PROXIMITY factor can be used to check a uptrend
 | Backtesting to         | 2021-10-07 03:05:00 |
 | Max open trades        | 6                   |
 |                        |                     |
-| Total/Daily Avg Trades | 747 / 11.15         |
+| Total/Daily Avg Trades | 445 / 6.64          |
 | Starting balance       | 250.000 BUSD        |
-| Final balance          | 311.550 BUSD        |
-| Absolute profit        | 61.550 BUSD         |
-| Total profit %         | 24.62%              |
-| Avg. stake amount      | 51.562 BUSD         |
-| Total trade volume     | 38517.037 BUSD      |
+| Final balance          | 289.980 BUSD        |
+| Absolute profit        | 39.980 BUSD         |
+| Total profit %         | 15.99%              |
+| Avg. stake amount      | 50.899 BUSD         |
+| Total trade volume     | 22650.242 BUSD      |
 |                        |                     |
-| Best Pair              | XEC/BUSD 29.49%     |
-| Worst Pair             | SLP/BUSD -66.07%    |
-| Best trade             | TVK/BUSD 17.78%     |
-| Worst trade            | SOL/BUSD -28.73%    |
-| Best day               | 19.465 BUSD         |
-| Worst day              | -76.812 BUSD        |
-| Days win/draw/lose     | 45 / 10 / 13        |
-| Avg. Duration Winners  | 1:37:00             |
-| Avg. Duration Loser    | 4 days, 4:43:00     |
-| Rejected Buy signals   | 1286660             |
+| Best Pair              | C98/BUSD 27.7%      |
+| Worst Pair             | SLP/BUSD -48.08%    |
+| Best trade             | IDEX/BUSD 8.39%     |
+| Worst trade            | SLP/BUSD -28.64%    |
+| Best day               | 10.711 BUSD         |
+| Worst day              | -65.491 BUSD        |
+| Days win/draw/lose     | 56 / 7 / 5          |
+| Avg. Duration Winners  | 1:41:00             |
+| Avg. Duration Loser    | 3 days, 19:20:00    |
+| Rejected Buy signals   | 285781              |
 |                        |                     |
-| Min balance            | 250.232 BUSD        |
-| Max balance            | 389.633 BUSD        |
-| Drawdown               | 169.46%             |
-| Drawdown               | 105.073 BUSD        |
-| Drawdown high          | 139.633 BUSD        |
-| Drawdown low           | 34.560 BUSD         |
-| Drawdown Start         | 2021-09-07 12:45:00 |
-| Drawdown End           | 2021-09-07 15:05:00 |
+| Min balance            | 251.155 BUSD        |
+| Max balance            | 362.661 BUSD        |
+| Drawdown               | 112.94%             |
+| Drawdown               | 72.681 BUSD         |
+| Drawdown high          | 112.661 BUSD        |
+| Drawdown low           | 39.980 BUSD         |
+| Drawdown Start         | 2021-09-19 00:45:00 |
+| Drawdown End           | 2021-10-07 03:05:00 |
 | Market change          | 89.73%              |
 ================================================
 ```
