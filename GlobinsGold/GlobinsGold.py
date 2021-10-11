@@ -22,9 +22,10 @@ class GlobinsGold(IStrategy):
     author@: Marcos Freitas
     github@: https://github.com/marcosfreitas/freqtrade-strategies
 
+    @todo improve description
     This strategy file combines these trading strategies:
-    - 3 SMAs, a bearing exchanging technique set on X,Y,Z (based on hyperopt results, by default It is 30, 50 and 100).
-
+    - 3 SMAs Crossovers
+      a bearing exchanging technique set on X,Y,Z periods (based on hyperopt results, by default It is 30, 50 and 100).
 
     How to use it?
     > python3 ./freqtrade/main.py -s GlobinsGold
@@ -35,28 +36,26 @@ class GlobinsGold(IStrategy):
 
     # Minimal ROI designed for the strategy.
     # This attribute will be overridden if the config file contains "minimal_roi".
-    """
+
     minimal_roi = {
         "60":  0.0, # Sell after 60 minutes if the profit is not negative
         "30":  0.03, # Sell after 30 minutes if there is at least 3% profit
         "20":  0.04, # Sell after 20 minutes if there is at least 4% profit
         "0":  0.05 # Sell immediately if there is at least 5% profit
     }
-    """
 
     # Optimal stoploss designed for the strategy.
     # This attribute will be overridden if the config file contains "stoploss".
     # Immediate sell if the profit dips below -10% for a given trade.
-    #stoploss = -0.10
+    stoploss = -0.05
 
     # Trailing stoploss
-    #trailing_stop = True
-    #trailing_only_offset_is_reached = False
-    #trailing_stop_positive = 0.01
-    # trailing_stop_positive_offset = 0.0  # Disabled / not configured
+    trailing_stop = True
+    trailing_stop_positive = 0.01
+    trailing_stop_positive_offset = 0.0  # Disabled / not configured
+    trailing_only_offset_is_reached = False
 
     # --- Buy hyperspace params, optimized by SharpeHyperOptLossDaily loss function:
-       # Buy hyperspace params:
     buy_params = {
         "buy_2sma_enabled": True,
         "buy_3sma_enabled": False,
@@ -66,21 +65,21 @@ class GlobinsGold(IStrategy):
         "buy_cdl_hammer_enabled": False,
         "buy_ema_enabled": False,
         "buy_ema_short": 14,
-        "buy_mom_enabled": True,
+        "buy_mom_enabled": False,
         "buy_rsi": 68,
-        "buy_rsi_enabled": True,
+        "buy_rsi_enabled": False,
         "buy_trigger": "macd_cross_signal",
     }
 
     # Sell hyperspace params:
     sell_params = {
         "sell_2sma_enabled": True,
-        "sell_3sma_enabled": True,
+        "sell_3sma_enabled": False,
         "sell_3sma_long": 15,
         "sell_3sma_medium": 8,
         "sell_3sma_short": 4,
         "sell_cdl_hammer_enabled": False,
-        "sell_ema_enabled": True,
+        "sell_ema_enabled": False,
         "sell_ema_short": 14,
         "sell_mom_enabled": False,
         "sell_rsi": 52,
@@ -98,21 +97,10 @@ class GlobinsGold(IStrategy):
     }
 
     # ROI table:
-    minimal_roi = {
-        "0": 0.178,
-        "24": 0.084,
-        "36": 0.028,
-        "130": 0
-    }
 
     # Stoploss:
-    stoploss = -0.286
 
     # Trailing stop:
-    trailing_stop = True
-    trailing_stop_positive = 0.091
-    trailing_stop_positive_offset = 0.127
-    trailing_only_offset_is_reached = False
 
     #---
 
@@ -125,7 +113,7 @@ class GlobinsGold(IStrategy):
     # These values can be overridden in the "ask_strategy" section in the config.
     use_sell_signal = True
     sell_profit_only = False
-    # sell_profit_offset = 0
+    sell_profit_offset = 0
     ignore_roi_if_buy_signal = False
 
     # Number of candles the strategy requires before producing valid signals
@@ -146,25 +134,25 @@ class GlobinsGold(IStrategy):
     }
 
     """
-    plot_config = {
-        # Main plot indicators (Moving averages, ...)
-        'main_plot': {
-           'ema5': {},
-           'ema10': {},
-           'ema20': {},
-        },
-        'subplots': {
-            # Subplots - each dict defines one additional plot
-            "MACD": {
-                'macd': {'color': 'blue'},
-                'macdsignal': {'color': 'orange'},
-            },
-            "RSI": {
-                'rsi': {'color': 'red'},
-            }
-        }
-    }
+    @todo configure ploting
     """
+    plot_config = {
+        "main_plot": {
+            "sma_5": {
+                "color": "#Eedb0b",
+                "type": "line"
+            },
+            "sma_20": {
+                "color": "#4c9dcb",
+                "type": "line"
+            },
+            "ema_short_5": {
+                "color": "#D30bee",
+                "type": "line"
+            }
+        },
+        "subplots": {}
+    }
 
     buy_mom_enabled= BooleanParameter(default=True, space="buy")
     buy_rsi_enabled = BooleanParameter(default=True, space="buy")
@@ -416,9 +404,9 @@ class GlobinsGold(IStrategy):
             dataframe[f'sell_sma_long_{val}'] = ta.SMA(dataframe, timeperiod=val)
 
 
-
-        dataframe['sma_50'] = ta.SMA(dataframe, timeperiod=50)
-        dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
+        dataframe['ema_short_5'] = ta.EMA(dataframe, timeperiod=5)
+        dataframe['sma_5'] = ta.SMA(dataframe, timeperiod=5)
+        dataframe['sma_20'] = ta.SMA(dataframe, timeperiod=20)
 
         # Parabolic SAR
         #dataframe['sar'] = ta.SAR(dataframe)
@@ -515,7 +503,7 @@ class GlobinsGold(IStrategy):
         """
             - if SMA_SHORT crosses above all SMAs
             -- extra check with proximity factor
-            - if SMA_50 crosses above SMA_200
+            - if SMA_5 crosses above SMA_20
             - if Momentum is positive
             - if RSI is oversold compared to Its limits
             - if Consider Hammer in max value
@@ -539,15 +527,30 @@ class GlobinsGold(IStrategy):
             )
             dataframe.loc[check_3sma,'buy_tag'] += '3sma '
             conditions.append(check_3sma)
+
+        # 2 SMA Crossover
         if self.buy_2sma_enabled.value:
-            conditions.append(qtpylib.crossed_above(
-                dataframe['sma_50'], dataframe['sma_200']
-            ))
+            buy_2ma = (
+                qtpylib.crossed_above(
+                    dataframe['sma_5'], dataframe['sma_20']
+                )
+            )
+            dataframe.loc[buy_2ma,'buy_tag'] += '2sma '
+            conditions.append(buy_2ma)
+
+            check_volume = dataframe['volume'] >= 1000
+            dataframe.loc[check_volume,'buy_tag'] += 'volume_1000 '
+            conditions.append(check_volume)
+
         if self.buy_rsi_enabled.value:
-            print(dataframe['rsi'])
-            conditions.append(dataframe['rsi'] < self.buy_rsi.value)
+            rsi = (dataframe['rsi'] < self.buy_rsi.value)
+            dataframe.loc[rsi,'buy_tag'] += 'rsi '
+            conditions.append(rsi)
+
         if self.buy_cdl_hammer_enabled.value:
-            conditions.append(dataframe['CDLHAMMER'] == 100)
+            cdl_hammer = (dataframe['CDLHAMMER'] == 100)
+            dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_hammer '
+            conditions.append(cdl_hammer)
 
 
         # Triggers
@@ -556,33 +559,46 @@ class GlobinsGold(IStrategy):
             - if close price is minor than bolinger lowerband
             - if MACD crossed above Its signal line
         """
-        if self.buy_trigger == 'elders_moment':
+        # @todo remove false
+        if self.buy_trigger == 'elders_moment' and False:
             # Trying Elder's Moment
             # combining A Momentum with a EMA. By default it's expected to be a MOM(14) with a EMA(19) for H1-D1 time frames.
             # A buy signal is Momentum above the average level, the most part of a body of the current candle is higher than a moving average
             # @see https://www.fcxchief.asia/library/indicators/momentum-indicator/
-            conditions.append(
-                (dataframe['close'] > dataframe[f'buy_ema_short_{self.buy_ema_short.value}'])
+
+            elders_moment = (
+                dataframe['close'] > dataframe[f'buy_ema_short_{self.buy_ema_short.value}']
             )
+            dataframe.loc[elders_moment,'buy_tag'] += 'elders_moment '
+            conditions.append(elders_moment)
+
 
             if self.buy_mom_enabled.value:
-                conditions.append(dataframe['mom'] > 0)
+                moment = (dataframe['mom'] > 0)
+                dataframe.loc[moment,'buy_tag'] += 'moment '
+                conditions.append(moment)
 
-        if self.buy_trigger == 'bb_lower':
-            check_bb_lower = (
+        # @todo remove false
+        if self.buy_trigger == 'bb_lower' and False:
+            bb_lowerband = (
                 dataframe['close'] < dataframe['bb_lowerband']
             )
-            dataframe.loc[check_bb_lower,'buy_tag'] += 'bb_lower '
-            conditions.append(check_bb_lower)
+            dataframe.loc[bb_lowerband,'buy_tag'] += 'bb_lowerband '
+            conditions.append(bb_lowerband)
 
-        if self.buy_trigger.value == 'macd_cross_signal':
-            conditions.append(qtpylib.crossed_above(
-                dataframe['macd'], dataframe['macdsignal']
-            ))
+        # @todo remove false
+        if self.buy_trigger.value == 'macd_cross_signal' and False:
+            macd = (
+                qtpylib.crossed_above(
+                    dataframe['macd'], dataframe['macdsignal']
+                )
+            )
+            dataframe.loc[macd,'buy_tag'] += 'macd_positive '
+            conditions.append(macd)
 
         # Check that volume is not 0
         check_volume = dataframe['volume'] > 0
-        dataframe.loc[check_volume,'buy_tag'] += 'volume '
+        dataframe.loc[check_volume,'buy_tag'] += 'volume_0 '
         conditions.append(check_volume)
 
         """
@@ -602,8 +618,8 @@ class GlobinsGold(IStrategy):
 
         if conditions:
             dataframe.loc[
-                reduce(lambda x, y: x & y, conditions),
-                ['buy']
+                reduce(lambda x, y: x | y, conditions),
+                'buy'
             ] = 1
 
         return dataframe
@@ -626,7 +642,7 @@ class GlobinsGold(IStrategy):
             - if RSI is oversold compared to its limits
         """
 
-        if self.sell_3sma_enabled.value:
+        if self.sell_3sma_enabled.value and False:
             conditions.append(
                 (dataframe[f'sell_sma_short_{self.sell_3sma_short.value}'] < dataframe[f'sell_sma_medium_{self.sell_3sma_medium.value}'])
                 &
@@ -634,11 +650,14 @@ class GlobinsGold(IStrategy):
                 &
                 (dataframe[f'sell_sma_medium_{self.sell_3sma_medium.value}'] < dataframe[f'sell_sma_long_{self.sell_3sma_long.value}'])
             )
+
+        # 2 SMA Crossover
         if self.sell_2sma_enabled.value:
             conditions.append(qtpylib.crossed_below(
-                dataframe['sma_50'], dataframe['sma_200']
+                dataframe['sma_5'], dataframe['sma_20']
             ))
-        if self.sell_rsi_enabled.value:
+
+        if self.sell_rsi_enabled.value and False:
             conditions.append(dataframe['rsi'] > self.sell_rsi.value)
 
         # Triggers
@@ -647,7 +666,8 @@ class GlobinsGold(IStrategy):
             - if close price is greater than bolinger lowerband
             - if MACD crossed below Its signal line
         """
-        if self.sell_trigger == 'elders_moment':
+        # @todo remove false
+        if self.sell_trigger == 'elders_moment' and False:
             # Trying Elder's Moment
             # combining A Momentum with a EMA. By default it's expected to be a MOM(14) with a EMA(19) for H1-D1 time frames.
             # A sell signal is Momentum below the average level, the most part of a body of the current candle is higher than a moving average
@@ -659,9 +679,12 @@ class GlobinsGold(IStrategy):
             if self.sell_mom_enabled.value:
                 conditions.append(dataframe['mom'] < 0)
 
-        if self.sell_trigger == 'bb_lower':
+        # @todo remove false
+        if self.sell_trigger == 'bb_lower' and False:
             conditions.append(dataframe['close'] > dataframe['bb_lowerband'])
-        if self.sell_trigger.value == 'macd_cross_signal':
+
+        # @todo remove false
+        if self.sell_trigger.value == 'macd_cross_signal' and False:
             conditions.append(qtpylib.crossed_below(
                 dataframe['macd'], dataframe['macdsignal']
             ))
@@ -685,7 +708,7 @@ class GlobinsGold(IStrategy):
 
         if conditions:
             dataframe.loc[
-                reduce(lambda x, y: x & y, conditions),
+                reduce(lambda x, y: x | y, conditions),
                 'sell'
             ] = 1
 
