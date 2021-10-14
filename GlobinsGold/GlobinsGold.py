@@ -491,8 +491,7 @@ class GlobinsGold(IStrategy):
 
             # @todo add default protections
 
-
-            buy_condition = []
+            buy_condition = [True]
             if group_index == 1:
 
                  # 2 SMA Crossover
@@ -537,12 +536,14 @@ class GlobinsGold(IStrategy):
                     buy_condition.append(cdl_hammer)
 
                 if self.buy_cdl_inverted_hammer_enabled.value:
-                    buy_condition.append(dataframe['CDLINVERTEDHAMMER'] == 100)
-                    dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_inverted_hammer '
+                    cdl_inverted_hammer = (dataframe['CDLINVERTEDHAMMER'] == 100)
+                    dataframe.loc[cdl_inverted_hammer,'buy_tag'] += 'cdl_inverted_hammer '
+                    buy_condition.append(cdl_inverted_hammer)
 
                 if self.buy_cdl_3_white_soldiers_enabled.value:
-                    buy_condition.append(dataframe['CDL3WHITESOLDIERS'] == 100)
-                    dataframe.loc[cdl_hammer,'buy_tag'] += 'cdl_3_white_soldiers '
+                    cdl_3_white_soldiers = (dataframe['CDL3WHITESOLDIERS'] == 100)
+                    dataframe.loc[cdl_3_white_soldiers,'buy_tag'] += 'cdl_3_white_soldiers '
+                    buy_condition.append(cdl_3_white_soldiers)
 
             elif group_index == 3:
 
