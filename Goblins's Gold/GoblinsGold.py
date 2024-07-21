@@ -15,9 +15,10 @@ import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 from functools import reduce
 
-class GlobinsGold(IStrategy):
+# @todo to fix this class name
+class GoblinsGold(IStrategy):
     """
-    Globin's Gold
+    Goblins's Gold
     author@: Marcos Freitas
     github@: https://github.com/marcosfreitas/freqtrade-strategies
 
@@ -73,7 +74,7 @@ class GlobinsGold(IStrategy):
     startup_candle_count: int = 100
 
     # Optional order type mapping.
-    # @todo test change limit to market
+    # @todo test change "limit" to "market"
     order_types = {
         'buy': 'limit',
         'sell': 'limit',
@@ -137,16 +138,16 @@ class GlobinsGold(IStrategy):
     }
 
     buy_rsi_enabled = BooleanParameter(default=True, space="buy")
-    buy_ema_enabled = BooleanParameter(default=False, space="buy")
-    buy_3sma_enabled = BooleanParameter(default=False, space="buy")
+    buy_ema_enabled = BooleanParameter(default=True, space="buy")
+    buy_3sma_enabled = BooleanParameter(default=True, space="buy")
     buy_2sma_enabled = BooleanParameter(default=True, space="buy")
     buy_cdl_hammer_enabled = BooleanParameter(default=True, space="buy")
     buy_cdl_inverted_hammer_enabled = BooleanParameter(default=True, space="buy")
     buy_cdl_3_white_soldiers_enabled = BooleanParameter(default=True, space="buy")
 
     sell_rsi_enabled = BooleanParameter(default=True, space="sell")
-    sell_ema_enabled = BooleanParameter(default=False, space="sell")
-    sell_3sma_enabled = BooleanParameter(default=False, space="sell")
+    sell_ema_enabled = BooleanParameter(default=True, space="sell")
+    sell_3sma_enabled = BooleanParameter(default=True, space="sell")
     sell_2sma_enabled = BooleanParameter(default=True, space="sell")
     sell_cdl_hanging_man_enabled = BooleanParameter(default=True, space="sell")
     sell_cdl_shooting_star_enabled = BooleanParameter(default=True, space="sell")
@@ -487,12 +488,12 @@ class GlobinsGold(IStrategy):
         dataframe.loc[:, 'buy'] = 0
         dataframe.loc[:, 'group_name'] = ''
 
-        for group_index in self.buy_conditions_groups:
+        for key, group in self.buy_conditions_groups.items():
 
             # @todo add default protections
 
             buy_condition = [True]
-            if group_index == 1:
+            if key == 1:
 
                  # 2 SMA Crossover
                 if self.buy_2sma_enabled.value:
@@ -527,7 +528,7 @@ class GlobinsGold(IStrategy):
                     dataframe.loc[(rsi_middle | rsi_low),'buy_tag'] += 'rsi '
                     buy_condition.append(rsi_middle | rsi_low)
 
-            elif group_index == 2:
+            elif key == 2:
 
                 if self.buy_cdl_hammer_enabled.value:
                     # 100 represent that the bullish pattern is observed in this point in the data
@@ -545,7 +546,7 @@ class GlobinsGold(IStrategy):
                     dataframe.loc[cdl_3_white_soldiers,'buy_tag'] += 'cdl_3_white_soldiers '
                     buy_condition.append(cdl_3_white_soldiers)
 
-            elif group_index == 3:
+            elif key == 3:
 
                 # Guards and Trends
                 """
@@ -576,7 +577,7 @@ class GlobinsGold(IStrategy):
                     dataframe.loc[check_3sma,'buy_tag'] += '3sma '
                     buy_condition.append(check_3sma)
 
-            elif group_index == 4:
+            elif key == 4:
 
                 # Triggers
                 """
@@ -598,7 +599,7 @@ class GlobinsGold(IStrategy):
                     dataframe.loc[elders_moment,'buy_tag'] += 'elders_moment '
                     buy_condition.append(elders_moment)
 
-            elif group_index == 5:
+            elif key == 5:
 
                 if self.buy_trigger == 'bb_lower':
                     bb_lowerband = (
@@ -607,7 +608,7 @@ class GlobinsGold(IStrategy):
                     dataframe.loc[bb_lowerband,'buy_tag'] += 'bb_lowerband '
                     buy_condition.append(bb_lowerband)
 
-            elif group_index == 6:
+            elif key == 6:
 
                 if self.buy_trigger.value == 'macd_cross_signal':
                     macd = (
@@ -622,13 +623,16 @@ class GlobinsGold(IStrategy):
             volume_gt_zero = (dataframe['volume'] > 0)
             condition_group = (volume_gt_zero & reduce(lambda x, y: x & y, buy_condition))
 
-            dataframe.loc[condition_group, 'group_name'] += self.buy_conditions_groups[group_index]["name"]
+            print(f'Group {key} - Name: {group["name"]}, Enabled: {group["enabled"]}, Buy Condition: {buy_condition}, Condition Group: {condition_group}')
+
+            dataframe.loc[condition_group, 'group_name'] += group["name"]
 
             conditions.append(condition_group)
 
         if conditions:
             # change | to & can decrease profit
             dataframe.loc[:, 'buy'] = reduce(lambda x, y: x | y, conditions)
+
 
         return dataframe
 

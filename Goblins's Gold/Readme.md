@@ -1,4 +1,4 @@
-# Globin's Gold
+# Goblin's Gold
 
 Working in a 5min time frame;
 
@@ -14,7 +14,7 @@ Example:
 
 ![link](./images/2-sma-crossover.png "2 SMAs Crossover")
 
-### 2 Short MA types Crossover(experimental)
+### 2 Short MA types Crossover (experimental)
 
 A EMA vs SMA shorter-term flowlines crossing each other.
 
