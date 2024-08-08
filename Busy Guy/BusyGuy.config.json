@@ -1,0 +1,66 @@
+{
+    //"dry_run": true,
+    //"dry_run_wallet": 100,
+    //"tradable_balance_ratio": 0.99,
+    "strategy": "BusyGuy",
+    "ignore_buying_expired_candle_after" : 90,
+    "unfilledtimeout": {
+        "entry": 30,
+        "exit": 10,
+        "unit": "seconds"
+    },
+    "order_types": {
+        "buy": "market",
+        "sell": "market",
+        "forcesell": "market",
+        "emergencysell": "market",
+        "trailing_stop_loss": "market",
+        "stoploss": "market",
+        "stoploss_on_exchange": false,
+        "stoploss_on_exchange_interval": 60
+    },
+    "bid_strategy": {
+        "price_side": "ask",
+        "use_order_book": false
+    },
+    "ask_strategy": {
+        "price_side": "bid",
+        "use_order_book": false,
+        "order_book_min": 1,
+        "order_book_max": 1
+    },
+    "exchange": {
+        "pair_whitelist": [
+            "BTC/USDT",
+            "BCH/USDT",
+            "LTC/USDT",
+            "ADA/USDT",
+            "BAKE/USDT",
+            "LINK/USDT",
+            "PEOPLE/USDT",
+            "ETH/USDT",
+            "SOL/USDT",
+            "RAY/USDT",
+            "IOTA/USDT",
+            "CTSI/USDT",
+            "BNB/USDT",
+            "XRP/USDT",
+            "DOGE/USDT"
+        ],
+        "pair_blacklist": []
+    },
+    "pairlists": [
+        {"method": "StaticPairList"}
+    ],
+    "edge": {
+        "minimum_expectancy": 0.10
+    },
+    "telegram": {
+        "enabled": true,
+
+        // iii_pftbot
+        "token": "2039600238:AAHsDwEFTQubeemvLQmK5_zYoY_cE9f-KzQ",
+         // telegram user' chat id
+        "chat_id": "126751536"
+    }
+}
