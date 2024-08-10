@@ -49,116 +49,117 @@ freqtrade hyperopt --job-workers 2 --hyperopt-loss SharpeHyperOptLossDaily --spa
 ===================================================== BACKTESTING REPORT =====================================================
 |        Pair |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |      Avg Duration |   Win  Draw  Loss  Win% |
 |-------------+----------+----------------+-------------------+----------------+-------------------+-------------------------|
-|    RAY/USDT |       23 |           4.85 |            71.834 |          71.83 |  5 days, 19:55:00 |    23     0     0   100 |
-|   DOGE/USDT |       10 |           4.84 |            38.980 |          38.98 |   2 days, 4:18:00 |    10     0     0   100 |
-|    SOL/USDT |       12 |           4.26 |            35.205 |          35.20 |  10 days, 6:00:00 |    12     0     0   100 |
-| PEOPLE/USDT |        9 |           4.34 |            32.825 |          32.83 | 41 days, 22:53:00 |     9     0     0   100 |
-|   BAKE/USDT |       10 |           5.26 |            28.242 |          28.24 |   6 days, 4:48:00 |    10     0     0   100 |
-|    BTC/USDT |        9 |           4.17 |            23.912 |          23.91 |  23 days, 1:47:00 |     9     0     0   100 |
-|    BNB/USDT |        8 |           5.00 |            23.506 |          23.51 |  3 days, 12:00:00 |     8     0     0   100 |
-|   CTSI/USDT |       11 |           4.30 |            20.606 |          20.61 |   5 days, 0:38:00 |    11     0     0   100 |
-|    LTC/USDT |        8 |           3.86 |            18.442 |          18.44 |   5 days, 3:22:00 |     8     0     0   100 |
-|   IOTA/USDT |        9 |           4.51 |            13.302 |          13.30 |   4 days, 9:20:00 |     8     0     1  88.9 |
-|    XRP/USDT |        6 |           4.36 |            11.796 |          11.80 |  20 days, 7:40:00 |     6     0     0   100 |
-|    ETH/USDT |        6 |           3.57 |             7.790 |           7.79 | 25 days, 22:40:00 |     6     0     0   100 |
-|    BCH/USDT |       14 |           0.65 |           -19.192 |         -19.19 | 15 days, 16:04:00 |    13     0     1  92.9 |
-|   LINK/USDT |        7 |          -1.63 |           -31.472 |         -31.47 | 25 days, 15:34:00 |     6     0     1  85.7 |
-|    ADA/USDT |        9 |          -1.10 |           -33.676 |         -33.68 | 48 days, 23:47:00 |     8     0     1  88.9 |
-|       TOTAL |      151 |           3.54 |           242.099 |         242.10 | 14 days, 14:51:00 |   147     0     4  97.4 |
-================================================== LEFT OPEN TRADES REPORT ==================================================
-|      Pair |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |       Avg Duration |   Win  Draw  Loss  Win% |
-|-----------+----------+----------------+-------------------+----------------+--------------------+-------------------------|
-| IOTA/USDT |        1 |         -20.00 |           -26.701 |         -26.70 |   7 days, 12:00:00 |     0     0     1     0 |
-| LINK/USDT |        1 |         -40.63 |           -48.667 |         -48.67 |  130 days, 4:00:00 |     0     0     1     0 |
-|  ADA/USDT |        1 |         -49.84 |           -57.577 |         -57.58 | 141 days, 17:00:00 |     0     0     1     0 |
-|  BCH/USDT |        1 |         -46.62 |           -58.502 |         -58.50 |  117 days, 8:00:00 |     0     0     1     0 |
-|     TOTAL |        4 |         -39.27 |          -191.447 |        -191.45 |   99 days, 4:15:00 |     0     0     4     0 |
+|    RAY/USDT |       17 |           4.89 |            43.784 |          43.78 |   4 days, 3:32:00 |    17     0     0   100 |
+|   NEAR/USDT |       14 |           4.84 |            41.938 |          41.94 |    1 day, 3:04:00 |    14     0     0   100 |
+|   BAKE/USDT |       11 |           5.07 |            33.215 |          33.21 | 12 days, 10:33:00 |    11     0     0   100 |
+|    INJ/USDT |       13 |           3.98 |            33.164 |          33.16 |   9 days, 1:28:00 |    13     0     0   100 |
+| PEOPLE/USDT |       10 |           4.40 |            32.116 |          32.12 |  32 days, 4:18:00 |    10     0     0   100 |
+|   DOGE/USDT |        8 |           5.07 |            29.340 |          29.34 |   1 day, 19:22:00 |     8     0     0   100 |
+|    SOL/USDT |       11 |           4.48 |            26.714 |          26.71 | 10 days, 12:16:00 |    11     0     0   100 |
+|   PEPE/USDT |        6 |           3.64 |            20.097 |          20.10 |   3 days, 1:20:00 |     6     0     0   100 |
+|    BCH/USDT |        8 |           4.40 |            19.274 |          19.27 | 15 days, 13:00:00 |     8     0     0   100 |
+|    WIF/USDT |        2 |           5.28 |            12.201 |          12.20 |          11:00:00 |     2     0     0   100 |
+|    XRP/USDT |        4 |           4.18 |            10.533 |          10.53 |  48 days, 0:00:00 |     3     0     1  75.0 |
+|    LTC/USDT |        6 |           4.51 |            10.006 |          10.01 | 24 days, 21:30:00 |     6     0     0   100 |
+|    ETH/USDT |        6 |           3.68 |             8.579 |           8.58 | 24 days, 13:30:00 |     6     0     0   100 |
+|   SHIB/USDT |        2 |           6.18 |             8.240 |           8.24 |  4 days, 15:00:00 |     2     0     0   100 |
+|    NOT/USDT |        0 |           0.00 |             0.000 |           0.00 |              0:00 |     0     0     0     0 |
+|    BTC/USDT |        6 |           1.98 |            -2.023 |          -2.02 | 54 days, 22:50:00 |     5     0     1  83.3 |
+|    BNB/USDT |        8 |           1.96 |            -4.423 |          -4.42 |  10 days, 8:08:00 |     7     0     1  87.5 |
+|   CTSI/USDT |       15 |          -0.52 |           -49.766 |         -49.77 |  27 days, 2:44:00 |    14     0     1  93.3 |
+|       TOTAL |      147 |           3.80 |           272.988 |         272.99 |  15 days, 7:55:00 |   143     0     4  97.3 |
+================================================= LEFT OPEN TRADES REPORT ==================================================
+|     Pair |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |       Avg Duration |   Win  Draw  Loss  Win% |
+|----------+----------+----------------+-------------------+----------------+--------------------+-------------------------|
+| ETH/USDT |        1 |           1.37 |             0.947 |           0.95 |            2:00:00 |     1     0     0   100 |
+| XRP/USDT |        1 |          -3.62 |            -4.029 |          -4.03 | 146 days, 17:00:00 |     0     0     1     0 |
+| BTC/USDT |        1 |         -13.10 |           -14.215 |         -14.21 |  147 days, 8:00:00 |     0     0     1     0 |
+| BNB/USDT |        1 |         -15.09 |           -18.090 |         -18.09 |  54 days, 15:00:00 |     0     0     1     0 |
+|    TOTAL |        4 |          -7.61 |           -35.386 |         -35.39 |   87 days, 4:30:00 |     1     0     3  25.0 |
 =================================================================== ENTER TAG STATS ====================================================================
 |                            Enter Tag |   Entries |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |      Avg Duration |   Win  Draw  Loss  Win% |
 |--------------------------------------+-----------+----------------+-------------------+----------------+-------------------+-------------------------|
-| stochastic_oversold_adx_strong_trend |       115 |           3.82 |           215.710 |         215.71 | 10 days, 14:10:00 |   113     0     2  98.3 |
-|      rsi_oversold_price_above_sma200 |         9 |           4.87 |            28.851 |          28.85 |  9 days, 16:07:00 |     9     0     0   100 |
-|   price_far_from_sma200_great_volume |        27 |           1.91 |            -2.461 |          -2.46 | 33 days, 10:16:00 |    25     0     2  92.6 |
-|                                TOTAL |       151 |           3.54 |           242.099 |         242.10 | 14 days, 14:51:00 |   147     0     4  97.4 |
-============================================================== EXIT REASON STATS ===============================================================
-|                    Exit Reason |   Exits |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |      Avg Duration |   Win  Draw  Loss  Win% |
-|--------------------------------+---------+----------------+-------------------+----------------+-------------------+-------------------------|
-|                            roi |     111 |           5.04 |           341.735 |         341.73 |  15 days, 2:08:00 |   111     0     0   100 |
-|             trailing_stop_loss |      21 |           5.27 |            76.370 |          76.37 |           4:46:00 |    21     0     0   100 |
-|                    exit_signal |      13 |           1.37 |            13.588 |          13.59 |  9 days, 22:09:00 |    13     0     0   100 |
-| death_cross_price_below_sma200 |       2 |           1.86 |             1.854 |           1.85 |    1 day, 9:00:00 |     2     0     0   100 |
-|                     force_exit |       4 |         -39.27 |          -191.447 |        -191.45 |  99 days, 4:15:00 |     0     0     4     0 |
-|                          TOTAL |     151 |           3.54 |           242.099 |         242.10 | 14 days, 14:51:00 |   147     0     4  97.4 |
-============================================================================================= MIXED TAG STATS ==============================================================================================
-|                                                                Enter Tag |   Exit Reason |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |       Avg Duration |   Win  Draw  Loss  Win% |
-|--------------------------------------------------------------------------+---------------+----------+----------------+-------------------+----------------+--------------------+-------------------------|
-|                          ('stochastic_oversold_adx_strong_trend', 'roi') |               |       88 |           5.05 |           267.297 |         267.30 |   10 days, 4:57:00 |    88     0     0   100 |
-|                            ('price_far_from_sma200_great_volume', 'roi') |               |       17 |           5.00 |            56.845 |          56.85 |  40 days, 19:21:00 |    17     0     0   100 |
-|           ('stochastic_oversold_adx_strong_trend', 'trailing_stop_loss') |               |       18 |           4.09 |            49.172 |          49.17 |            4:57:00 |    18     0     0   100 |
-|             ('price_far_from_sma200_great_volume', 'trailing_stop_loss') |               |        2 |          14.32 |            18.258 |          18.26 |            5:00:00 |     2     0     0   100 |
-|                               ('rsi_oversold_price_above_sma200', 'roi') |               |        6 |           5.00 |            17.593 |          17.59 |  13 days, 19:50:00 |     6     0     0   100 |
-|                ('rsi_oversold_price_above_sma200', 'trailing_stop_loss') |               |        1 |           8.30 |             8.941 |           8.94 |            1:00:00 |     1     0     0   100 |
-|                    ('price_far_from_sma200_great_volume', 'exit_signal') |               |        5 |           1.55 |             6.416 |           6.42 |  11 days, 15:36:00 |     5     0     0   100 |
-|                  ('stochastic_oversold_adx_strong_trend', 'exit_signal') |               |        7 |           1.13 |             6.411 |           6.41 |   9 days, 18:51:00 |     7     0     0   100 |
-|    ('rsi_oversold_price_above_sma200', 'death_cross_price_below_sma200') |               |        1 |           3.45 |             1.556 |           1.56 |    1 day, 19:00:00 |     1     0     0   100 |
-|                       ('rsi_oversold_price_above_sma200', 'exit_signal') |               |        1 |           2.09 |             0.761 |           0.76 |    2 days, 6:00:00 |     1     0     0   100 |
-| ('price_far_from_sma200_great_volume', 'death_cross_price_below_sma200') |               |        1 |           0.26 |             0.298 |           0.30 |           23:00:00 |     1     0     0   100 |
-|                     ('price_far_from_sma200_great_volume', 'force_exit') |               |        2 |         -34.92 |           -84.277 |         -84.28 |  74 days, 14:30:00 |     0     0     2     0 |
-|                   ('stochastic_oversold_adx_strong_trend', 'force_exit') |               |        2 |         -43.62 |          -107.169 |        -107.17 | 123 days, 18:00:00 |     0     0     2     0 |
-|                                                                    TOTAL |               |      151 |           3.54 |           242.099 |         242.10 |  14 days, 14:51:00 |   147     0     4  97.4 |
+| stochastic_oversold_adx_strong_trend |       116 |           4.54 |           296.539 |         296.54 | 12 days, 13:56:00 |   116     0     0   100 |
+|      rsi_oversold_price_above_sma200 |         7 |           2.01 |             1.852 |           1.85 | 31 days, 10:51:00 |     6     0     1  85.7 |
+|   price_far_from_sma200_great_volume |        24 |           0.70 |           -25.404 |         -25.40 | 23 days, 22:00:00 |    21     0     3  87.5 |
+|                                TOTAL |       147 |           3.80 |           272.988 |         272.99 |  15 days, 7:55:00 |   143     0     4  97.3 |
+========================================================= EXIT REASON STATS =========================================================
+|        Exit Reason |   Exits |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |       Avg Duration |   Win  Draw  Loss  Win% |
+|--------------------+---------+----------------+-------------------+----------------+--------------------+-------------------------|
+|                roi |     102 |           5.08 |           284.838 |         284.84 |  16 days, 10:58:00 |   102     0     0   100 |
+| trailing_stop_loss |      32 |           4.13 |            98.142 |          98.14 |            4:26:00 |    32     0     0   100 |
+|        exit_signal |       8 |           1.00 |             3.410 |           3.41 |   9 days, 15:45:00 |     8     0     0   100 |
+|         force_exit |       4 |          -7.61 |           -35.386 |         -35.39 |   87 days, 4:30:00 |     1     0     3  25.0 |
+|          stop_loss |       1 |         -70.06 |           -78.017 |         -78.02 | 142 days, 23:00:00 |     0     0     1     0 |
+|              TOTAL |     147 |           3.80 |           272.988 |         272.99 |   15 days, 7:55:00 |   143     0     4  97.3 |
+======================================================================================== MIXED TAG STATS =========================================================================================
+|                                                      Enter Tag |   Exit Reason |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |       Avg Duration |   Win  Draw  Loss  Win% |
+|----------------------------------------------------------------+---------------+----------+----------------+-------------------+----------------+--------------------+-------------------------|
+|                ('stochastic_oversold_adx_strong_trend', 'roi') |               |       83 |           5.06 |           223.046 |         223.05 |  16 days, 14:59:00 |    83     0     0   100 |
+| ('stochastic_oversold_adx_strong_trend', 'trailing_stop_loss') |               |       26 |           3.90 |            70.878 |          70.88 |            4:09:00 |    26     0     0   100 |
+|                  ('price_far_from_sma200_great_volume', 'roi') |               |       16 |           5.23 |            54.995 |          55.00 |   14 days, 6:22:00 |    16     0     0   100 |
+|   ('price_far_from_sma200_great_volume', 'trailing_stop_loss') |               |        4 |           5.16 |            18.789 |          18.79 |            8:15:00 |     4     0     0   100 |
+|      ('rsi_oversold_price_above_sma200', 'trailing_stop_loss') |               |        2 |           5.05 |             8.474 |           8.47 |            0:30:00 |     2     0     0   100 |
+|                     ('rsi_oversold_price_above_sma200', 'roi') |               |        3 |           5.00 |             6.797 |           6.80 |  23 days, 12:20:00 |     3     0     0   100 |
+|        ('stochastic_oversold_adx_strong_trend', 'exit_signal') |               |        7 |           0.84 |             2.615 |           2.61 |  10 days, 17:09:00 |     7     0     0   100 |
+|             ('rsi_oversold_price_above_sma200', 'exit_signal') |               |        1 |           2.09 |             0.795 |           0.80 |    2 days, 6:00:00 |     1     0     0   100 |
+|              ('rsi_oversold_price_above_sma200', 'force_exit') |               |        1 |         -13.10 |           -14.215 |         -14.21 |  147 days, 8:00:00 |     0     0     1     0 |
+|           ('price_far_from_sma200_great_volume', 'force_exit') |               |        3 |          -5.78 |           -21.172 |         -21.17 |   67 days, 3:20:00 |     1     0     2  33.3 |
+|            ('price_far_from_sma200_great_volume', 'stop_loss') |               |        1 |         -70.06 |           -78.017 |         -78.02 | 142 days, 23:00:00 |     0     0     1     0 |
+|                                                          TOTAL |               |      147 |           3.80 |           272.988 |         272.99 |   15 days, 7:55:00 |   143     0     4  97.3 |
 ================== SUMMARY METRICS ==================
 | Metric                      | Value               |
 |-----------------------------+---------------------|
 | Backtesting from            | 2023-01-02 00:00:00 |
-| Backtesting to              | 2024-08-04 00:00:00 |
+| Backtesting to              | 2024-08-09 00:00:00 |
 | Max open trades             | 4                   |
 |                             |                     |
-| Total/Daily Avg Trades      | 151 / 0.26          |
+| Total/Daily Avg Trades      | 147 / 0.25          |
 | Starting balance            | 100 USDT            |
-| Final balance               | 342.099 USDT        |
-| Absolute profit             | 242.099 USDT        |
-| Total profit %              | 242.10%             |
-| CAGR %                      | 116.84%             |
-| Sortino                     | 0.62                |
-| Sharpe                      | 0.92                |
-| Calmar                      | 22.22               |
-| Profit factor               | 2.26                |
-| Expectancy (Ratio)          | 1.60 (0.03)         |
-| Avg. daily profit %         | 0.42%               |
-| Avg. stake amount           | 65.066 USDT         |
-| Total trade volume          | 9824.99 USDT        |
+| Final balance               | 372.988 USDT        |
+| Absolute profit             | 272.988 USDT        |
+| Total profit %              | 272.99%             |
+| CAGR %                      | 127.35%             |
+| Sortino                     | 0.31                |
+| Sharpe                      | 1.24                |
+| Calmar                      | 40.00               |
+| Profit factor               | 3.39                |
+| Expectancy (Ratio)          | 1.86 (0.06)         |
+| Avg. daily profit %         | 0.47%               |
+| Avg. stake amount           | 59.16 USDT          |
+| Total trade volume          | 8696.497 USDT       |
 |                             |                     |
-| Best Pair                   | RAY/USDT 71.83%     |
-| Worst Pair                  | LINK/USDT -31.47%   |
-| Best trade                  | IOTA/USDT 26.12%    |
-| Worst trade                 | ADA/USDT -49.84%    |
-| Best day                    | 21.846 USDT         |
-| Worst day                   | -191.447 USDT       |
-| Days win/draw/lose          | 110 / 466 / 1       |
-| Avg. Duration Winners       | 12 days, 7:38:00    |
-| Avg. Duration Loser         | 99 days, 4:15:00    |
-| Max Consecutive Wins / Loss | 147 / 4             |
-| Rejected Entry signals      | 2673                |
+| Best Pair                   | RAY/USDT 43.78%     |
+| Worst Pair                  | CTSI/USDT -49.77%   |
+| Best trade                  | XRP/USDT 10.33%     |
+| Worst trade                 | CTSI/USDT -70.06%   |
+| Best day                    | 22.038 USDT         |
+| Worst day                   | -78.017 USDT        |
+| Days win/draw/lose          | 98 / 484 / 2        |
+| Avg. Duration Winners       | 12 days, 7:42:00    |
+| Avg. Duration Loser         | 122 days, 21:45:00  |
+| Max Consecutive Wins / Loss | 140 / 2             |
+| Rejected Entry signals      | 2934                |
 | Entry/Exit Timeouts         | 0 / 0               |
 |                             |                     |
 | Min balance                 | 101.25 USDT         |
-| Max balance                 | 533.546 USDT        |
-| Max % of account underwater | 35.88%              |
-| Absolute Drawdown (Account) | 35.88%              |
-| Absolute Drawdown           | 191.447 USDT        |
-| Drawdown high               | 433.546 USDT        |
-| Drawdown low                | 242.099 USDT        |
-| Drawdown Start              | 2024-07-27 08:00:00 |
-| Drawdown End                | 2024-08-04 00:00:00 |
-| Market change               | 240.39%             |
+| Max balance                 | 479.972 USDT        |
+| Max % of account underwater | 22.29%              |
+| Absolute Drawdown (Account) | 22.29%              |
+| Absolute Drawdown           | 106.984 USDT        |
+| Drawdown high               | 379.972 USDT        |
+| Drawdown low                | 272.988 USDT        |
+| Drawdown Start              | 2024-06-15 06:00:00 |
+| Drawdown End                | 2024-08-09 00:00:00 |
+| Market change               | 309.92%             |
 =====================================================
 
-Backtested 2023-01-02 00:00:00 -> 2024-08-04 00:00:00 | Max open trades : 4
-================================================================= STRATEGY SUMMARY =================================================================
-|   Strategy |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |      Avg Duration |   Win  Draw  Loss  Win% |             Drawdown |
-|------------+----------+----------------+-------------------+----------------+-------------------+-------------------------+----------------------|
-|    BusyGuy |      151 |           3.54 |           242.099 |         242.10 | 14 days, 14:51:00 |   147     0     4  97.4 | 191.447 USDT  35.88% |
-====================================================================================================================================================
+Backtested 2023-01-02 00:00:00 -> 2024-08-09 00:00:00 | Max open trades : 4
+================================================================= STRATEGY SUMMARY ================================================================
+|   Strategy |   Trades |   Avg Profit % |   Tot Profit USDT |   Tot Profit % |     Avg Duration |   Win  Draw  Loss  Win% |             Drawdown |
+|------------+----------+----------------+-------------------+----------------+------------------+-------------------------+----------------------|
+|    BusyGuy |      147 |           3.80 |           272.988 |         272.99 | 15 days, 7:55:00 |   143     0     4  97.3 | 106.984 USDT  22.29% |
+===================================================================================================================================================
 
 
 ```

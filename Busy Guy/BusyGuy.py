@@ -27,7 +27,7 @@ class BusyGuy(IStrategy):
     Indicators: 200 SMA, 50 SMA, RSI, Bollinger Bands
     author@: Marcos Freitas
     github@: https://github.com/marcosfreitas/freqtrade-strategies
-    version@: 1.0.1-2024-08-09
+    version@: 1.1.0-2024-08-09
 
     Strategy's logic explained:
 
@@ -44,6 +44,7 @@ class BusyGuy(IStrategy):
     - The strategy also uses the RSI and Bollinger Bands to provide additional confirmation for the signals.
     - Designed to timeframe of 1h
     - Added Hypeopt attributes, optimized by SharpeHyperOptLossDaily loss function are loaded from BusyGuy.json
+    - Added protections for cooldown, max drawdown and stoploss
 
     """
 
@@ -63,11 +64,11 @@ class BusyGuy(IStrategy):
 
     # Minimal ROI designed for the strategy.
     minimal_roi = {
-        "0": 1, # 100% for the first 3 candles
-        str(timeframe_mins * 3): 0.50,  # 50% after 3 candles
-        str(timeframe_mins * 6): 0.20, 
-        str(timeframe_mins * 9): 0.10,  
-        str(timeframe_mins * 12): 0.05,
+        "0": DecimalParameter(0.02, 1.0, default=0.5, space='roi'), # exit immediately if achieved x% profit
+        str(timeframe_mins * 3): DecimalParameter(0.02, 1.0, default=0.5, space='roi'),  # after 3 candles
+        str(timeframe_mins * 6): DecimalParameter(0.02, 1.0, default=0.2, space='roi'), 
+        str(timeframe_mins * 9): DecimalParameter(0.02, 1.0, default=0.3, space='roi'),  
+        str(timeframe_mins * 12): DecimalParameter(0.02, 1.0, default=0.1, space='roi')
     }
 
     # Stoploss:
@@ -90,6 +91,8 @@ class BusyGuy(IStrategy):
     sell_profit_only = True
     ignore_roi_if_buy_signal = False
 
+    # Define hyperopt parameters
+    
     buy_buffer = DecimalParameter(0.50, 1.0, default=0.98, space='buy')
     sell_buffer = DecimalParameter(0.50, 1.0, default=0.98, space='sell')
 
@@ -98,11 +101,16 @@ class BusyGuy(IStrategy):
     close_crossed_below_sma200_validity_period = IntParameter(1, 72, default=72, space='sell')  # Window of validity in hours
     #bands_crossover_validity_period = IntParameter(1, 30, default=24, space='buy')  # Window of validity in hours
 
-    # Define hyperopt parameters
     #buy_rsi = IntParameter(10, 40, default=30, space='buy')
     #sell_rsi = IntParameter(60, 90, default=70, space='sell')
 
-    # @todo add strategy flags to enable/disable buy/sell signals
+    # The percentage of profit at which the trailing profit starts to activate.
+    # Start trailing when 3% profit is reached
+    trailing_profit_start_percent = 0.03
+
+    # The distance (in percentage) from the maximum price that the trailing profit level should be set.
+    # Trail by 1% below the highest price reached
+    trailing_profit_percent = 0.01 
 
     # Optional order type mapping.
     order_types = {
@@ -144,6 +152,53 @@ class BusyGuy(IStrategy):
             }
         }
     }
+
+    use_max_drawdown_protection = BooleanParameter(default=True, space='protection', optimize=True)
+    use_stoploss_protection = BooleanParameter(default=True, space='protection', optimize=True)
+
+    cooldown_lookback = IntParameter(2, 48, default=24, space="protection", optimize=False)
+
+    maxdrawdown_loopback = IntParameter(12, 48, default=48, space='protection', optimize=True)
+    maxdrawdown_trade_limit = IntParameter(1, 20, default=20, space='protection', optimize=True)
+    maxdrawdown_stop_duration = IntParameter(12, 200, default=12, space='protection', optimize=True)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.2, default=0.2, space='protection', optimize=True)
+
+    stoploss_lookback = IntParameter(2, 60, default=10, space="protection", optimize=True)
+    stoploss_trade_limit = IntParameter(1, 2, default=1, space="protection", optimize=True)
+    stoploss_stop_duration = IntParameter(12, 200, default=20, space="protection", optimize=True)
+    stoploss_only_per_pair = BooleanParameter(default=True, space="protection", optimize=True)
+
+
+    @property
+    def protections(self):
+        prot = []
+
+        prot.append({
+            "method": "CooldownPeriod",
+            "stop_duration_candles": self.cooldown_lookback.value
+        })
+
+        if self.use_max_drawdown_protection.value:
+            prot.append(({
+                "method": "MaxDrawdown",
+                "lookback_period_candles": self.maxdrawdown_loopback.value,
+                "trade_limit": self.maxdrawdown_trade_limit.value,
+                "stop_duration_candles": self.maxdrawdown_stop_duration.value,
+                "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value,
+            }))
+
+
+        if self.use_stoploss_protection.value:
+            prot.append({
+                "method": "StoplossGuard",
+                "lookback_period_candles": self.stoploss_lookback.value,
+                "trade_limit": self.stoploss_trade_limit.value,
+                "stop_duration_candles": self.stoploss_stop_duration.value,
+                "only_per_pair": self.stoploss_only_per_pair.value,
+            })
+
+        return prot
+
 
     """
     Add TA indicators to the given dataframe
@@ -201,6 +256,11 @@ class BusyGuy(IStrategy):
         dataframe['upper_bband_crossed'] = qtpylib.crossed_above(dataframe['close'], dataframe['upper_bband'])
         dataframe['lower_bband_crossed'] = qtpylib.crossed_below(dataframe['close'], dataframe['lower_bband'])
 
+        # track the maximum favorable price movement since entry
+        dataframe['highest_price_since_entry'] = dataframe['close'].cummax()
+
+        # @ todo for shorts, not implemented yet
+        # dataframe['lowest_price_since_entry'] = dataframe['close'].cummin()
 
         # Identify downtrend by checking if previous 'n' candles had lower close prices
         n = 3  # Number of previous candles to check for a downtrend
@@ -305,7 +365,21 @@ class BusyGuy(IStrategy):
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe['exit_tag'] = None
 
-        # Define an exit condition based on death cross
+        # Start trailing profit only after a certain profit level is reached
+        #trailing_profit_start_price = dataframe['close'] * (1 + self.trailing_profit_start_percent)
+
+        # Calculate the trailing stop level
+        #trailing_profit_level = dataframe['highest_price_since_entry'] * (1 - self.trailing_profit_percent)
+
+        #dataframe.loc[
+        #    (
+        #        (dataframe['close'] < trailing_profit_level) &  # Exit if price falls below the trailing profit level
+        #        (dataframe['close'] > trailing_profit_start_price)  # Ensure we're in profit before trailing),
+        #    ),
+        #    ['exit_long', 'exit_tag']
+        #] = (1, 'trailing_stop_price_hit')
+
+        # exit condition based on death cross
         dataframe.loc[
             (
                 (dataframe['death_cross']) &  # Confirm a death cross occurred
