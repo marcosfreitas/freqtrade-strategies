@@ -1,5 +1,5 @@
 {
-    //"dry_run": true,
+    "dry_run": true,
     //"dry_run_wallet": 100,
     //"tradable_balance_ratio": 0.99,
     "strategy": "BusyGuy",
@@ -34,33 +34,44 @@
             "BTC/USDT",
             "BCH/USDT",
             "LTC/USDT",
-            "ADA/USDT",
             "BAKE/USDT",
-            "LINK/USDT",
             "PEOPLE/USDT",
             "ETH/USDT",
             "SOL/USDT",
             "RAY/USDT",
-            "IOTA/USDT",
             "CTSI/USDT",
             "BNB/USDT",
             "XRP/USDT",
-            "DOGE/USDT"
+            "DOGE/USDT",
+            "TON/USDT",
+            "PEPE/USDT",
+            "SHIB/USDT",
+            "WIF/USDT",
+            "NEAR/USDT",
+            "NOT/USDT",
+            "INJ/USDT"
         ],
-        "pair_blacklist": []
+        "pair_blacklist": [
+            "IOTA/USDT",
+            "ADA/USDT",
+            "LINK/USDT"
+        ]
     },
     "pairlists": [
-        {"method": "StaticPairList"}
+        {"method": "StaticPairList"},
+        {
+            "method": "AgeFilter",
+            "min_days_listed": 30
+        }
     ],
     "edge": {
         "minimum_expectancy": 0.10
     },
     "telegram": {
-        "enabled": true,
-
-        // bot token
+        "enabled": false,
+        // created bot token id 
         "token": "",
-         // telegram user' chat id
+        // telegram chat user id
         "chat_id": ""
     }
 }

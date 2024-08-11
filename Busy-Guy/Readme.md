@@ -1,4 +1,4 @@
-# BusyGuy Strategy v1.0.0 @ 2024-08-08
+# BusyGuy Strategy v1.1.0 @ 2024-08-09
 
 Strategy's logic explained:
 
@@ -18,14 +18,14 @@ Checkout buy and sell signal functions for more details on the strategy's logic.
 
 # Commands
 
+## Data Download
+### Bull Market from feb-2023 to july-2024 (YYYYMMDD)
+
+`freqtrade download-data --timeframes 15m 1h 4h 1d --timerange 20230102-20240804 --config ./user_data/configs/config.json --config ./user_data/configs/BusyGuy.config.json`
+
+## Backtesting and Optimization
+### Change the timerange to correspond to the backtesting interval, so you will get similar results
 ```
-# bull market from feb-2023 to july-2024 (YYYYMMDD)
-
-freqtrade download-data --timeframes 15m 1h 4h 1d --timerange 20230102-20240804 --config ./user_data/configs/config.json --config ./user_data/configs/BusyGuy.config.json && \
---config ./user_data/configs/config_pairs_a.json --config ./user_data/configs/config_pairs_b.json --config ./user_data/configs/config_pairs_c.json
-
-# Backtesting and Optimization
-# Change the timerange to correspond to the backtesting interval, so you will get similar results
 
 freqtrade backtesting --strategy BusyGuy --timeframe 1h --timerange 20230102-2024084 --config ./user_data/configs/config.json --config ./user_data/configs/BusyGuy.config.json
 
@@ -33,8 +33,11 @@ freqtrade lookahead-analysis --strategy BusyGuy --timeframe 1h --cache none --dr
 
 freqtrade lookahead-analysis --strategy BusyGuy --timeframe 1h --cache none --dry-run-wallet 10000000 --stake-amount 1000 --enable-protections --timerange 20240101-20240804 --config ./user_data/configs/config.json --config ./user_data/configs/BusyGuy.config.json
 
-# Attention to the limit of job workers your machine can handle.
+```
 
+### Attention to the limit of job workers your machine can handle.
+
+```
 freqtrade hyperopt --job-workers 2 --hyperopt-loss SharpeHyperOptLossDaily --spaces buy sell --strategy BusyGuy -e 200 --timeframe 1h --timerange 20230102-20240804 --config ./user_data/configs/config.json --config ./user_data/configs/BusyGuy.config.json
 
 ```
@@ -160,6 +163,5 @@ Backtested 2023-01-02 00:00:00 -> 2024-08-09 00:00:00 | Max open trades : 4
 |------------+----------+----------------+-------------------+----------------+------------------+-------------------------+----------------------|
 |    BusyGuy |      147 |           3.80 |           272.988 |         272.99 | 15 days, 7:55:00 |   143     0     4  97.3 | 106.984 USDT  22.29% |
 ===================================================================================================================================================
-
 
 ```

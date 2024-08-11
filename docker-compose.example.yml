@@ -1,0 +1,28 @@
+version: '3'
+services:
+    
+  BusyGuy:
+    image: freqtradeorg/freqtrade:2024.6
+    restart: unless-stopped
+    volumes:
+      # map all the files from the strategy folder to the container and vice versa
+      # directories are similar to the ones in the container to keep it simple
+      - ./Busy-Guy:/freqtrade/user_data
+      
+      # fix datetime issue, for linux operation systems
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8087:8080"
+
+
+    # If some required files mentioned below do not exists, you maybe receive some fatal errors because of unexistent files.
+    # Per example, the database and logs files, but you can create them manually or just start the container again.
+
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/BusyGuy.log
+      --db-url sqlite:////freqtrade/user_data/databases/tradesv3_BusyGuy.sqlite
+      --config /freqtrade/user_data/configs/config.json
+      --config /freqtrade/user_data/configs/BusyGuy.config.json
+      --strategy BusyGuy
