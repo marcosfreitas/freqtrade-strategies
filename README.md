@@ -1,3 +1,5 @@
+### 🏁 Some strategies are under active development phase, or having the final strategy being validated with the current market status, a testing mode on with live market data.
+
 # FreqTrade Strategies
 common, popular and hand-made personal strategies that I'm testing.
 
