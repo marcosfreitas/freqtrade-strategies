@@ -2,7 +2,7 @@ version: '3'
 services:
     
   BusyGuy:
-    image: freqtradeorg/freqtrade:2024.6
+    image: freqtradeorg/freqtrade:2024.10
     restart: unless-stopped
     volumes:
       # map all the files from the strategy folder to the container and vice versa

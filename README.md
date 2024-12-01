@@ -7,13 +7,13 @@ common, popular and hand-made personal strategies that I'm testing.
 
 # Compatibility
 
-Last FreqTrade compatibily version: **2024.6**
+Last FreqTrade compatibily version: **2024.10**
 
 # How to run
 
 You should have you own structure to run the FreqTrade and optionally the FreqTrade UI. Please check out the [FreqTrade](https://freqtrade.io/) website for more information about the first steps.
 
-To run my strategies, place the strategy file and its `{Strategy Name}.json}` single file inside the `strategies` folder.
+To run my strategies, place the strategy file and its `{Strategy Name}.json` single file inside the `strategies` folder.
 
 Files from the `config` folder should be placed inside the FreqTrade `user_data` folder, you should indicate the path for the configuration files on the execution command line.
 
