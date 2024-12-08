@@ -1,3 +1,3 @@
-# (Upcoming!) Goblin's Gold Strategy
+# (Private, for sponsors only) Goblin's Gold Strategy
 
-Agressive, short-term strategy that use several indicators.
+An aggressive, short-term strategy that uses several indicators. For high-risk profiles.
