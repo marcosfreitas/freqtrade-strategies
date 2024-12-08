@@ -55,9 +55,11 @@ Check out the docker-compose example file and run it with:
 
 # Sponsors
 
-To be honest, achieving a great quality trading bot strategy is not easy and requires a bunch of tests, research, and spending resources. For this reason, only the Busy Guy strategy is public. I have others that are actively in development, consistent testing and growing, and being used in the live market.
+To be honest, achieving a great quality trading bot strategy is not easy and requires a bunch of tests, research, and spending resources. For this reason, only the Busy Guy strategy is public.
 
-Keep in mind that I can not guarantee your profits but I give you what I use for myself, so I expect you to have great results.
+I have other strategies that are actively in development, with consistent testing and growth. Some of them are already being used in the live market.
+
+> Keep in mind that I can not guarantee your profits but I give you what I use for myself, so I expect you to have great results.
 
 If you want to have access to my private strategies, please contact me by email: mf-ft-bots.q8kcc@passmail.net
 
