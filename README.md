@@ -59,7 +59,9 @@ I have other strategies that are actively in development, with consistent testin
 
 > Keep in mind that I can not guarantee your profits but I give you what I use for myself, so I expect you to have great results.
 
-If you want to have access to my private strategies, please contact me by email: mf-ft-bots.q8kcc@passmail.net
+If you want to have access to my private strategies, please contact me by email:
+
+mf-ft-bots.q8kcc@passmail.net
 
 # Buy me a coffee
 
