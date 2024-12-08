@@ -53,6 +53,14 @@ Check out the docker-compose example file and run it with:
 `docker-compose --file docker-compose.example.yml up`
 
 
+# Sponsors
+
+To be honest, achieving a great quality trading bot strategy is not easy and requires a bunch of tests, research, and spending resources. For this reason, only the Busy Guy strategy is public. I have others that are actively in development, consistent testing and growing, and being used in the live market.
+
+Keep in mind that I can not guarantee your profits but I give you what I use for myself, so I expect you to have great results.
+
+If you want to have access to my private strategies, please contact me by email: mf-ft-bots.q8kcc@passmail.net
+
 # Buy me a coffee
 
 Totally not required, but if you want to recognize my efforts, please contribute via the Crypto Networks below. Thank you so much!
