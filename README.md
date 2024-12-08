@@ -1,26 +1,27 @@
-### 🏁 Some strategies are under active development phase, or having the final strategy being validated with the current market status, a testing mode on with live market data.
+### 🏁 Some strategies are in an active development phase or have the final strategy being validated with the current market status, a testing mode on with live market data.
 
 # FreqTrade Strategies
-common, popular and hand-made personal strategies that I'm testing.
 
-**!!! The latest stable strategy is the Busy Guy, others are not updated.**
+Common, popular, and hand-made personal strategies that I'm testing.
+
+#### The most effective strategy is the BusyGuy, and it won´t receive public updates. You can use it at your own risk if you like.
 
 # Compatibility
 
-Last FreqTrade compatibily version: **2024.10**
+Last FreqTrade compatibility version: **2024.11 - Interface 2**
 
 # How to run
 
-You should have you own structure to run the FreqTrade and optionally the FreqTrade UI. Please check out the [FreqTrade](https://freqtrade.io/) website for more information about the first steps.
+You should have your own structure to run the FreqTrade and optionally the FreqTrade UI. Please check out the [FreqTrade](https://freqtrade.io/) website for more information about the first steps.
 
 To run my strategies, place the strategy file and its `{Strategy Name}.json` single file inside the `strategies` folder.
 
 Files from the `config` folder should be placed inside the FreqTrade `user_data` folder, you should indicate the path for the configuration files on the execution command line.
 
-For a multiple bots routine, the `config.json` file is the base for all your bots and you don´t need to duplicate it. The `BusyGuy.config.json`, per example, contains only specific configuration for that strategy execution and can override some parts of the base configuration.
+For a multiple bots routine, the `config.json` file is the base for all your bots and you don´t need to duplicate it. The `BusyGuy.config.json`, for example, contains only a specific configuration for that strategy execution and can override some parts of the base configuration.
 
-**If some required files mentioned below do not exists, you maybe receive some fatal errors because of unexistent files. 
-Per example, the database and logs files, but you can create them manually or just start the container again.**
+**If some required files mentioned below do not exist, you may receive some fatal errors because of unexistent files. 
+For example, the database and logs files, but you can create them manually or just start the container again.**
 
 ## Docker-compose example file
 
@@ -54,7 +55,7 @@ Check out the docker-compose example file and run it with:
 
 # Buy me a coffee
 
-Tottally not required, but if you want to recognize my efforts, please contribute via the Crypto Networks below. Thank you so much!
+Totally not required, but if you want to recognize my efforts, please contribute via the Crypto Networks below. Thank you so much!
 
 ```
 Solana: 7qMcg2tb4LGe2JzAXvYW9anto9ZTwLj6U2cEaG2ZSozU
